@@ -15,4 +15,5 @@ class HomePageTest(TestCase):
         request = HttpRequest()
         response = home_page(request)
         expected_html = render_to_string('home.html')
+        # this tests our implementation, not constants.
         self.assertEqual(response.content.decode(), expected_html)
