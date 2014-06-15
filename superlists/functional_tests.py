@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 import unittest
 
 
@@ -18,7 +19,7 @@ class NewVisitorTest(unittest.TestCase):
 
         # She notices the page title and header mention to-do lists
         self.assertIn('To-Do', self.browser.title)
-        header_text = self.browser.find_elements_by_tag_name('h1')
+        header_text = self.browser.find_elements_by_tag_name('h1').text
         self.assertIn('To-Do', header_text)
 
         # She is invited to enter a to-do item straight away
