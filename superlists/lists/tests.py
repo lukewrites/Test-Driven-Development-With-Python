@@ -1,22 +1,8 @@
-from django.template.loader import render_to_string
+# from django.template.loader import render_to_string
 from django.test import TestCase
 
 from lists.models import Item, List
-from lists.views import home_page
-
-
-# class HomePageTest(TestCase):
-
-#     def test_root_url_resolves_to_home(self):
-#         found = resolve('/')  # internal django function to resolve urls
-#         self.assertEqual(found.func, home_page)
-
-#     def test_home_page_returns_correct_html(self):
-#         request = HttpRequest()
-#         response = home_page(request)
-#         expected_html = render_to_string('home.html')
-#         # this tests our implementation, not constants.
-#         self.assertEqual(response.content.decode(), expected_html)
+# from lists.views import home_page
 
 
 class ItemModelTest(TestCase):
@@ -78,9 +64,25 @@ class ListAndItemModelsTest(TestCase):
         self.assertEqual(second_saved_item.text, 'Item the second')
         self.assertEqual(second_saved_item.list, list_)
 
+
 class ListViewTest(TestCase):
 
-    def test_displays_all_items(self):
+    def test_uses_list_template(self):
         list_ = List.objects.create()
-        Item.objects.create(text='itemey 1', list=list_)
-        Item.objects.create(text='itemey 2', list=list_)
+        response = self.client.get('/lists/%d/' % (list_.id,))
+        self.assertTemplateUsed(response, 'list.html')
+
+    def test_displays_only_items_for_that_list(self):
+        correct_list = List.objects.create()
+        Item.objects.create(text='itemey 1', list=correct_list)
+        Item.objects.create(text='itemey 2', list=correct_list)
+        other_list = List.objects.create()
+        Item.objects.create(text='other list item 1', list=other_list)
+        Item.objects.create(text='other list item 2', list=other_list)
+
+        response = self.client.get('/lists/%d/' % (correct_list.id,))
+
+        self.assertContains(response, 'itemey 1')
+        self.assertContains(response, 'itemey 2')
+        self.assertNotContains(response, 'other list item 1')
+        self.assertNotContains(response, 'other list item 2')
