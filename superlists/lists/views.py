@@ -9,7 +9,7 @@ def home_page(request):
 def new_list(request):
     list_ = List.objects.create()
     Item.objects.create(text=request.POST['item_text'], list=list_)
-    return redirect('/lists/%d/' % (list_.id,))
+    return redirect('/lists/%d/' % (list_.id,))  # id field created for us.
 
 
 def add_item(request, list_id):
