@@ -55,4 +55,4 @@ docs/_build/
 *.sublime-*
 
 # database
-*.sqlite3
+db.sqlite3
