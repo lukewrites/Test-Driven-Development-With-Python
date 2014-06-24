@@ -53,3 +53,6 @@ docs/_build/
 
 # Sublime Text files
 *.sublime-*
+
+# database
+*.sqlite3
